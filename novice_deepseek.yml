@@ -1,0 +1,218 @@
+menu_title: 'Отдел новичка'
+open_command:
+  - start
+size: 54
+update_interval: 20
+items:
+  black_panel:
+    material: black_stained_glass_pane
+    priority: 2
+    slots: [0, 45, 8, 53]
+  
+  orange_panel:
+    material: orange_stained_glass_pane  # Исправлено на оранжевый
+    enchantments:
+      - knockback;1
+    hide_enchantments: true
+    priority: 2
+    slots: [9, 18, 36, 44, 27, 17, 26, 35]
+
+  status_star:
+    display_name: '&d&lВаш статус'
+    lore:
+      - '&7&m--------------------'
+      - '&7Батл-пасс: %if luckperms_has_permission_battlepass.active%%&aАктивен%else%&cНеактивен%endif%'
+      - '&7Прогресс: &e%mycommand_playerdata_novice_sets_claimed%/5'
+      - '&7&m--------------------'
+    material: NETHER_STAR
+    slot: 4
+    update: true
+
+  # Сет 1 - Battle Pass
+  battlepass_buy:
+    display_name: '&6&lКупить Батл-пасс'
+    lore:
+      - '&7&m--------------------'
+      - '&7Откройте доступ ко всем сетевым наградам!'
+      - '&7Цена: &a5000$'
+      - '&7&m--------------------'
+      - '§7§l► §aНажмите чтобы купить.'
+    material: GOLDEN_APPLE
+    slot: 20
+    view_requirement:
+      requirements:
+        not_purchased:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_battlepass.active%"
+          value: "no"
+        has_money:
+          type: javascript
+          expression: "%vault_eco_balance% >= 5000"
+    left_click_commands:
+      - '[console] eco take %player_name% 5000'
+      - '[console] lp user %player_name% permission set battlepass.active true'
+      - '[message] &aБатл-пасс успешно активирован!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+      - '[openguimenu] start'
+
+  battlepass_owned:
+    display_name: '&a&lБатл-пасс активен'
+    lore:
+      - '&7&m--------------------'
+      - '&7Вы имеете доступ ко всем сетевым наградам!'
+      - '&7&m--------------------'
+    material: ENCHANTED_GOLDEN_APPLE
+    slot: 20
+    view_requirement:
+      requirements:
+        purchased:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_battlepass.active%"
+          value: "yes"
+
+  # Сет 1 - Награда
+  set1_claim:
+    display_name: '&e&l1-й Сет: Награда'
+    lore:
+      - '&7&m--------------------'
+      - '&7Награды за первый сет:'
+      - '&7&l▪ &a5000$ &fи &b10 Алмазов'
+      - '&7&m--------------------'
+      - '§7§l► §aНажмите чтобы получить.'
+    material: LECTERN
+    slot: 21
+    view_requirement:
+      requirements:
+        battlepass_owned:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_battlepass.active%"
+          value: "yes"
+        not_claimed:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_set.1.rewarded%"
+          value: "no"
+    left_click_commands:
+      - '[console] eco give %player_name% 5000'
+      - '[console] give %player_name% diamond 10'
+      - '[console] lp user %player_name% permission set set.1.rewarded true'
+      - '[console] mycmd-playerdata add_silent %player_name% novice_sets_claimed 1'
+      - '[message] &aНаграда за 1-й сет получена!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+      - '[openguimenu] start'
+
+  set1_done:
+    display_name: '&a&l1-й Сет: Получено'
+    lore:
+      - '&7&m--------------------'
+      - '&7Вы получили все награды этого сета'
+      - '&7&m--------------------'
+    material: ENCHANTED_LECTERN
+    slot: 21
+    view_requirement:
+      requirements:
+        claimed:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_set.1.rewarded%"
+          value: "yes"
+
+  # Сет 2 - Награда (требует завершения 1-го сета)
+  set2_claim:
+    display_name: '&e&l2-й Сет: Награда'
+    lore:
+      - '&7&m--------------------'
+      - '&7Награды за второй сет:'
+      - '&7&l▪ &a10000$ &fи &b20 Алмазов'
+      - '&7&m--------------------'
+      - '§7§l► §aНажмите чтобы получить.'
+    material: BOOK
+    slot: 22
+    view_requirement:
+      requirements:
+        battlepass_owned:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_battlepass.active%"
+          value: "yes"
+        prev_completed:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_set.1.rewarded%"
+          value: "yes"
+        not_claimed:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_set.2.rewarded%"
+          value: "no"
+    left_click_commands:
+      - '[console] eco give %player_name% 10000'
+      - '[console] give %player_name% diamond 20'
+      - '[console] lp user %player_name% permission set set.2.rewarded true'
+      - '[console] mycmd-playerdata add_silent %player_name% novice_sets_claimed 1'
+      - '[message] &aНаграда за 2-й сет получена!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+      - '[openguimenu] start'
+
+  set2_locked:
+    display_name: '&c&l2-й Сет: Заблокировано'
+    lore:
+      - '&7&m--------------------'
+      - '&7Требуется:'
+      - '&7- Активированный Батл-пасс'
+      - '&7- Завершение 1-го сета'
+      - '&7&m--------------------'
+    material: CHAIN
+    slot: 22
+    view_requirement:
+      requirements:
+        not_unlocked:
+          type: javascript
+          expression: "('%luckperms_has_permission_battlepass.active%' == 'no') || ('%luckperms_has_permission_set.1.rewarded%' == 'no')"
+
+  # Аналогичные блоки для set3, set4, set5
+  # с увеличением требований и наград
+  
+  # Кнопка назад
+  back:
+    display_name: ' &7&l● &e&lНазад'
+    lore:
+      - ''
+      - ' §7§l► §aНажмите чтобы вернуться'
+    material: PLAYER_HEAD
+    texture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjdhYWNhZDE5M2UyMjI2OTcxZWQ5NTMwMmRiYTQzMzQzOGJlNDY0NGZiYWI1ZWJmODE4MDU0MDYxNjY3ZmJlMiJ9fX0='
+    slot: 46
+    left_click_commands:
+      - '[player] buyer'
+    right_click_commands:
+      - '[player] buyer'
+
+  # Информационная кнопка
+  info_button:
+    display_name: '&e&lИнформация'
+    enchantments:
+      - knockback;1
+    hide_enchantments: true
+    material: KNOWLEDGE_BOOK
+    slot: 48
+    lore:
+      - '&7&m--------------------'
+      - '&7Нажмите для получения информации'
+      - '&7&m--------------------'
+    actions:
+      left_click:
+        - '[message] &eБатл-пасс дает доступ к эксклюзивным наградам!'
+        - '[sound] BLOCK_NOTE_BLOCK_PLING'
+
+  # Магазин (пример)
+  shop_access:
+    display_name: '&6&lЭксклюзивный магазин'
+    material: TURTLE_EGG
+    slot: 50
+    lore:
+      - '&7&m--------------------'
+      - '&7Доступно с Батл-пассом'
+      - '&7&m--------------------'
+    view_requirement:
+      requirements:
+        has_pass:
+          type: placeholder
+          placeholder: "%luckperms_has_permission_battlepass.active%"
+          value: "yes"
+    left_click_commands:
+      - '[openguimenu] battlepass_shop'
